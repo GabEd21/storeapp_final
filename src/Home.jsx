@@ -46,7 +46,7 @@ function Home() {
                                 <Button key={i} variant="outline-dark" className="btn-sm variation-btn">{size} UK</Button>
                             ))}
                         </div>
-                        <img src={`http://localhost:2000/${item.image}`} alt="Product" className="card-img-top" />
+                        <img src={item.image} alt="Product" className="card-img-top" />
                         <div className="card-body">
                             <p className="card-text">
                                 <h4>Php {item.price}</h4>
