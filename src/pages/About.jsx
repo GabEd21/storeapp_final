@@ -12,7 +12,7 @@ function About() {
         <Navbar.Collapse id="navbarColor01">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="#">Cart</Nav.Link>
+            <Nav.Link href="/cart">Cart</Nav.Link>
             <Nav.Link href="#" active>About</Nav.Link>
           </Nav>
           <Form className="d-flex">

@@ -1,18 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/lux/bootstrap.min.css';
-import './App.css';
 import Axios from 'axios';
 
 function Home() {
     const [items, setItems] = useState([]);
+    const [quantity, setQuantity] = useState(1); // State for quantity
 
     useEffect(() => {
         Axios.get('http://localhost:2000').then((response) => {
             setItems(response.data);
         });
     }, []);
+
+    const handleIncrement = () => {
+        setQuantity(quantity + 1); // Function to increment quantity
+    };
+
+    const handleDecrement = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1); // Function to decrement quantity, ensuring it doesn't go below 1
+        }
+    };
+
+    const addToCart = async (item) => {
+        try {
+            // Calculate the total amount
+            const total = item.price * quantity;
+
+            // Send a request to the server to add the item to the cart along with quantity and total amount
+            await Axios.post('http://localhost:2000/cart/add', { ...item, quantity, total });
+            // Optionally, you can navigate to the cart page or show a success message
+        } catch (error) {
+            console.error('Error adding item to cart:', error);
+        }
+    };
 
     return (
         <div className="App">
@@ -22,7 +46,7 @@ function Home() {
                 <Navbar.Collapse id="navbarColor01">
                     <Nav className="me-auto">
                         <Nav.Link href="/" active>Home</Nav.Link>
-                        <Nav.Link href="#">Cart</Nav.Link>
+                        <Nav.Link href="/cart">Cart</Nav.Link>
                         <Nav.Link href='/about'>About</Nav.Link>
                     </Nav>
                     <Form className="d-flex">
@@ -52,7 +76,16 @@ function Home() {
                                 <h4>Php {item.price}</h4>
                             </p>
                         </div>
-                        <Button variant="success" className="btn-lg">Buy Now</Button>
+                        {/* Quantity Selector */}
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <div className="quantity-selector">
+                                <button onClick={handleDecrement} className="btn btn-secondary btn-lg">-</button>
+                                <span className="mx-2">{quantity}</span>
+                                <button onClick={handleIncrement} className="btn btn-secondary btn-lg">+</button>
+                            </div>
+                            {/* Add to Cart Button */}
+                            <Button variant="success" className="btn-lg" onClick={() => addToCart(item)}>Add to Cart</Button>
+                        </div>
                     </div>
                 ))}
             </div>
